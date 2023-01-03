@@ -1,0 +1,77 @@
+﻿@using RPS.Core.Models
+@inject NavigationManager NavigationManager
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h1 class="h2">Backlog</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <button class="btn btn-outline-secondary"  @onclick="@(e => SelectPreset("My"))">My Items</button>
+            <button class="btn btn-outline-secondary"  @onclick="@(e => SelectPreset("Open"))">Open Items</button>
+            <button class="btn btn-outline-secondary"  @onclick="@(e => SelectPreset("Closed"))">Done Items</button>
+        </div>
+
+        <div class="btn-group mr-2">
+            <NavLink href="Create" class="btn btn-primary" >Add</NavLink>
+        </div>
+
+    </div>
+</div>
+
+<TelerikGrid Data="PtItems" Height="550px" Pageable="true" Sortable="true" OnRowClick="@OnRowClickHandler">
+    <GridColumns>
+        <GridColumn Field="Type" Title= " " Width="50px">
+            <Template>
+                @{
+                    var item = context as PtItem;
+                    <ItemTypeIndicator ItemType="@item.Type" ClassName="backlog-icon" />
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Field="Assignee" Title="Assignee" Width="120px">
+            <Template>
+                @{
+                    var item = context as PtItem;
+                    <UserAvatar User="item.Assignee" />
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Field="Title" Title="Title"></GridColumn>
+        <GridColumn Field="Priority" Title ="Priority" Width="100px">
+            <Template>
+                @{
+                    var item = context as PtItem;
+                    <PriorityIndicator Priority="item.Priority" />
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Field="Estimate" Title="Estimate" Width="100px"></GridColumn>
+        <GridColumn Field="DateCreated" Title="Created" Width="160px">
+            <Template>
+                @((context as PtItem).DateCreated.ToString("MMM d, yyyy"))
+            </Template>
+        </GridColumn>
+    </GridColumns>
+</TelerikGrid>
+
+
+
+
+<link href="css/backlog.css" rel="stylesheet" />
+
+@code {
+    private void SelectPreset(string presetStr)
+    {
+        NavigationManager.NavigateTo($"/backlog/{presetStr.ToLower()}");
+    }
+
+    private void RowSelected(int itemId)
+    {
+        NavigationManager.NavigateTo($"/details/{itemId}/details");
+    }
+
+    private void OnRowClickHandler(GridRowClickEventArgs args)
+    {
+        RowSelected((args.Item as PtItem).Id);
+    }
+}
+
