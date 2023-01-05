@@ -1,5 +1,6 @@
 ﻿@page "/dashboard"
 @page "/dashboard/{Months:int}/{UserId:int}"
+@using RPS.Core.Models;
 @using RPS.Web.Server.Components.Dashboard
 
 
@@ -24,13 +25,34 @@
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group mr-2">
 
-                <TelerikCalendar SelectionMode="@CalendarSelectionMode.Single" 
+                @*<TelerikCalendar SelectionMode="@CalendarSelectionMode.Single" 
                                     ValueChanged="@SingleSelectionChangeHandler">
 
-                </TelerikCalendar>
-                @*<TelerikButton Icon="calendar"  ThemeColor="primary" OnClick="@(_ => DateRangeFilter(3))">3 Months</TelerikButton>
-                <TelerikButton Icon="calendar" OnClick="@(_ => DateRangeFilter(6))">6 Months</TelerikButton>
-                <TelerikButton Icon="calendar" OnClick="@(_ => DateRangeFilter(12))">1 Year</TelerikButton>*@
+                </TelerikCalendar>*@
+
+               <div class="btn-group mr-2">
+
+                <TelerikComboBox Data="@Assignees" TextField="FullName" ValueField="Id" @bind-Value="SelectedAssigneeId"
+                                 Placeholder="Select assignee.." ClearButton="true" Filterable="true" FilterOperator="StringFilterOperator.Contains" Width="260px">
+                    <ItemTemplate>
+                        @{
+                            var item = context as PtUser;
+                            <div class="row" style="margin-left: 5px;">
+                                <UserAvatar User="item" ClassName="li-avatar rounded mx-auto"/>
+                                <span style="margin-left: 5px;">@item.FullName</span>
+                            </div>
+                        }
+
+                    </ItemTemplate>
+                </TelerikComboBox>
+
+
+
+            </div>
+
+                <TelerikButton Class="tbtn mr-1" Icon="calendar" OnClick="@(_ => DateRangeFilter(3))">3 Months</TelerikButton>
+                <TelerikButton Class="tbtn mr-1" Icon="calendar" OnClick="@(_ => DateRangeFilter(6))">6 Months</TelerikButton>
+                <TelerikButton Class="tbtn mr-1" Icon="calendar" OnClick="@(_ => DateRangeFilter(12))">1 Year</TelerikButton>
             </div>
         </div>
     </div>
@@ -43,7 +65,7 @@
                             Resizable="true"
                             OnResize="@ItemResize">
             <TileLayoutItems>
-                 <TileLayoutItem HeaderText="Active Issues" RowSpan="2">
+                 <TileLayoutItem HeaderText="Active Issues" RowSpan="1">
                     <Content>
                         <div class="col-12 col-lg-6 col-xl pb-4 active-issues">
                             <span class="comp-label">
@@ -53,7 +75,7 @@
                         </div>
                     </Content>
                 </TileLayoutItem>
-                <TileLayoutItem HeaderText="Closed Issues" RowSpan="2">
+                <TileLayoutItem HeaderText="Closed Issues" RowSpan="1">
                     <Content>
                         <div class="col-12 col-lg-6 col-xl pb-4 text-success closed-issues">
                             <span class="comp-label">
@@ -63,7 +85,7 @@
                         </div>
                     </Content>
                 </TileLayoutItem>
-                <TileLayoutItem HeaderText="Open Issues" RowSpan="2">
+                <TileLayoutItem HeaderText="Open Issues" RowSpan="1">
                     <Content>
                         <div class="col-12 col-lg-6 col-xl pb-4 text-danger open-issues">
                             <span class="comp-label">
@@ -73,9 +95,8 @@
                         </div>
                     </Content>
                 </TileLayoutItem>
-                <TileLayoutItem HeaderText="Active Issues">
+                <TileLayoutItem HeaderText="Active Issues" RowSpan="1">
                     <Content>
-                        <div class="row">
                             <div class="col-12 col-lg-6 col-xl pb-4 close-rate">
                                 <span class="comp-label">
                                     <strong>@IssueCloseRate</strong>
@@ -92,7 +113,6 @@
                                     on Oct 9, 2018
                                 </p>
                             </div>
-                        </div>
                     </Content>
                 </TileLayoutItem>
                 <TileLayoutItem HeaderText="All Issues" ColSpan="4" RowSpan="2">
@@ -123,12 +143,16 @@
         UserId = UserId.HasValue ? UserId.Value : 0;
         NavigationManager.NavigateTo($"/dashboard/{Months}/{UserId}");
         Refresh();
-    } 
+    }
+
+
 
     private void ItemResize()
     {
         IssueChartRef.RefreshTelerikChart();
     }
+
+
 }
 
 

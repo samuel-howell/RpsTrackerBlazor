@@ -2,7 +2,7 @@
     <NavLink class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">
         <img src="images/rpslogo.png" class="logo">
     </NavLink>
-    <nav class="my-2 my-md-0 mr-md-3">
+    <nav class="my-2 my-md-0 mr-md-3 ">
          <TelerikMenu Data="@MyMenuItems" UrlField="@nameof(MenuItem.Page)" Orientation="@orientation"></TelerikMenu>
     </nav>
 </div>
@@ -25,12 +25,14 @@
         List<MenuItem> mitems = new List<MenuItem>
         {
             new MenuItem { Text = "Dashboard", Page = "/dashboard" },
-            new MenuItem { Text = "Backlog", Items = new List<MenuItem>
-            {
-               new MenuItem { Text = "My Items", Page = "/backlog/my" },
-               new MenuItem { Text = "Open Items", Page = "/backlog/open" },
-               new MenuItem { Text = "Closed Items", Page = "/backlog/closed" },
-            } },
+            new MenuItem { Text = "Backlog", Page = "/backlog", 
+            //Items = new List<MenuItem>
+            //{
+            //   new MenuItem { Text = "My Items", Page = "/backlog/my" },
+            //   new MenuItem { Text = "Open Items", Page = "/backlog/open" },
+            //   new MenuItem { Text = "Closed Items", Page = "/backlog/closed" },
+            //} 
+            },
         };
         MyMenuItems = mitems;
     }

@@ -17,14 +17,23 @@
     </div>
 </div>
 
-<TelerikGrid Data="PtItems" Height="550px" Pageable="true" Sortable="true" OnRowClick="@OnRowClickHandler">
+<TelerikGrid  Reorderable="true" Resizable="true" Data="PtItems" Height="550px" Pageable="true" Sortable="true" OnRowClick="@OnRowClickHandler" ShowColumnMenu="true">
+
+  
+    <GridToolBar>
+        <GridCommandButton Class="mx-auto" Command="ExcelExport">Export to Excel</GridCommandButton>
+    </GridToolBar>
+
+    <GridExport>
+        <GridExcelExport FileName="RPS-Issues" AllPages="true" />
+    </GridExport>
     <GridColumns>
-        <GridColumn Field="Type" Title= " " Width="50px">
+        <GridColumn Field=Type Title= " " Width="150px">
             <Template>
                 @{
                     var item = context as PtItem;
                     <ItemTypeIndicator ItemType="@item.Type" ClassName="backlog-icon" />
-                }
+                } 
             </Template>
         </GridColumn>
         <GridColumn Field="Assignee" Title="Assignee" Width="120px">
@@ -35,7 +44,7 @@
                 }
             </Template>
         </GridColumn>
-        <GridColumn Field="Title" Title="Title"></GridColumn>
+        <GridColumn Field="Title" Title="Title" Width="200px"></GridColumn>
         <GridColumn Field="Priority" Title ="Priority" Width="100px">
             <Template>
                 @{
@@ -44,10 +53,15 @@
                 }
             </Template>
         </GridColumn>
-        <GridColumn Field="Estimate" Title="Estimate" Width="100px"></GridColumn>
+        <GridColumn Field="Estimate" Title="Estimate" Width="120px"></GridColumn>
         <GridColumn Field="DateCreated" Title="Created" Width="160px">
             <Template>
                 @((context as PtItem).DateCreated.ToString("MMM d, yyyy"))
+            </Template>
+        </GridColumn>
+        <GridColumn Field="Description" Title="Description" Width="160px">
+            <Template>
+                @((context as PtItem).Description.ToString())
             </Template>
         </GridColumn>
     </GridColumns>

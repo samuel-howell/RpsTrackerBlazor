@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration.UserSecrets;
+using RPS.Core.Models;
 using RPS.Core.Models.Dto;
 using RPS.Data;
 
@@ -47,6 +48,11 @@ namespace RPS.Web.Server.Pages
             Refresh();
         }
 
+        protected override void OnInitialized()
+        {
+            Assignees = RpsUserRepo.GetAll().ToList();
+        }
+
         private void SingleSelectionChangeHandler(DateTime newValue)
         {
             DateStart = newValue;
@@ -56,8 +62,8 @@ namespace RPS.Web.Server.Pages
 
         private void Refresh()
         {
-            //DateTime start = Months.HasValue ? DateTime.Now.AddMonths(Months.Value * -1) : DateTime.Now.AddYears(-5);
-            DateTime start = DateStart.HasValue ? DateStart.Value : DateTime.Now.AddYears(-5);
+            DateTime start = Months.HasValue ? DateTime.Now.AddMonths(Months.Value * -1) : DateTime.Now.AddYears(-5);
+            //DateTime start = DateStart.HasValue ? DateStart.Value : DateTime.Now.AddYears(-5);
             DateTime end = DateTime.Now;
 
             Filter = new PtDashboardFilter
@@ -78,5 +84,21 @@ namespace RPS.Web.Server.Pages
                 DateEnd = Filter.DateEnd;
             }
         }
+
+        [Inject]
+        private IPtUserRepository RpsUserRepo { get; set; }
+
+        public int? SelectedAssigneeId
+        {
+            get { return UserId; }
+            set
+            {
+                UserId = value.HasValue ? value : 0;
+                Months = Months.HasValue ? Months : 12;
+                NavigationManager.NavigateTo($"/dashboard/{Months}/{UserId}");
+            }
+        }
+
+        public List<PtUser> Assignees { get; set; }
     }
 }
