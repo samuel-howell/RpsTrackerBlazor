@@ -1,6 +1,7 @@
 ﻿@page "/dashboard"
 @page "/dashboard/{Months:int}/{UserId:int}"
 @using RPS.Core.Models;
+@using RPS.Web.Server.Components.Backlog
 @using RPS.Web.Server.Components.Dashboard
 
 
@@ -120,6 +121,91 @@
                         <IssueChart Filter="Filter" @ref="IssueChartRef"/>
                     </Content>
                 </TileLayoutItem>
+
+               <TileLayoutItem HeaderText="Telerik Card Demo" ColSpan="2" RowSpan="2">
+                   <Content>
+                        <TelerikCard Width="500px">
+                            <CardHeader>
+                                <CardTitle>Statistics Card</CardTitle>
+                            </CardHeader>
+
+                            <CardBody>
+                                
+                                    <CardTitle>Issues</CardTitle>
+                                    <CardSeparator></CardSeparator>
+                                    <CardSubTitle>Active Issues</CardSubTitle>
+                                    <p>@IssueCountActive</p>
+                                    <CardSubTitle>Closed Issues</CardSubTitle>
+                                    <p>@IssueCountClosed</p>
+                                    <CardSubTitle>Open Issues</CardSubTitle>
+                                    <p>@IssueCountOpen</p>
+                            </CardBody>
+                            <CardActions>
+                                <TelerikButton>Active</TelerikButton>
+                                <TelerikButton>Closed</TelerikButton>
+                                <TelerikButton>Open</TelerikButton>
+                            </CardActions>
+                            <CardFooter>
+                                <span style="float:right">Created By Samuel</span>
+                            </CardFooter>
+
+                        </TelerikCard>
+                   </Content>
+                </TileLayoutItem>
+
+            <TileLayoutItem HeaderText="Telerik Carousel Demo" ColSpan="2" RowSpan="2">
+                <Content>
+                    <TelerikCarousel Class="mx-auto" Data="@CarouselData" 
+                        Width="500px" Height="400px">
+                        <Template>
+                            <div class="d-flex justify-content-md-center">
+                                ID @(context.ID) : @(context.Text)
+                            </div>
+                            <div class="d-flex justify-content-md-center">
+                                <CardImage Src="https://docs.telerik.com/blazor-ui/components/card/images/rome.jpg"></CardImage>
+                            </div>
+                        </Template>
+                    </TelerikCarousel>
+                </Content>
+            </TileLayoutItem>
+
+            <TileLayoutItem HeaderText="Telerik Chunk Progress Bar" ColSpan="4" RowSpan="1">
+                <Content>
+                    <TelerikChunkProgressBar Value="@ChunkProgressBarValue" Max="@MaxValue" />
+                    <TelerikButton ThemeColor="primary" Class="d-flex mt-5 mx-auto" OnClick="@IncrementProgressBar">Click me to increment progress bar</TelerikButton>
+                </Content>
+            </TileLayoutItem>
+              
+            <TileLayoutItem HeaderText="Checkbox Demo" ColSpan="2" RowSpan="2">
+                <Content>
+                  <div class="form-check">
+                        <TelerikCheckBox Class="form-check-input" Id="myCheckbox1" @bind-Value="@isSelected1" />
+                        <label class="form-check-label" for="myCheckbox1">@( isSelected1 ? "1 Selected" : "Not Selected")</label>
+                        <br />
+                        <TelerikCheckBox Class="form-check-input" Id="myCheckbox2" @bind-Value="@isSelected2" />
+                        <label class="form-check-label" for="myCheckbox2">@( isSelected2 ? "2 Selected" : "Not Selected")</label>
+                        <br />
+                        <TelerikCheckBox Class="form-check-input" Id="myCheckbox3" @bind-Value="@isSelected3" />
+                        <label class="form-check-label" for="myCheckbox3">@( isSelected3 ? "3 Selected" : "Not Selected")</label>
+                </div> 
+                </Content>
+            </TileLayoutItem>
+            
+
+            <TileLayoutItem Class="tileBgColor" HeaderText="ColorGradient Demo" ColSpan="2" RowSpan="2">
+                <Content>
+                    <TelerikColorGradient Class="d-flex my-auto mx-auto" @bind-Value="@colorValue" />
+                </Content>
+
+            </TileLayoutItem>
+
+
+            <TileLayoutItem>
+                <Content>
+
+                </Content>
+            </TileLayoutItem>
+
             </TileLayoutItems>
         </TelerikTileLayout>
 
@@ -152,8 +238,48 @@
         IssueChartRef.RefreshTelerikChart();
     }
 
+    public class CarouselModel
+    {
+        public int ID { get; set; }
+        public string Text { get; set; }
+    }
 
+    public IEnumerable<CarouselModel> CarouselData = Enumerable.Range(1, 5).Select(
+        x => new CarouselModel
+            {
+                ID = x,
+                Text = "Text " + x,
+
+            }
+    );
+
+    private bool isSelected1 { get; set; }
+    private bool isSelected2 { get; set; }
+    private bool isSelected3 { get; set; }
+
+
+    public double MaxValue { get; set; } = 5;
+    public double ChunkProgressBarValue { get; set; } = 3;
+
+    public void IncrementProgressBar()
+    {
+        if(ChunkProgressBarValue <= 5)
+        {
+            ChunkProgressBarValue++;
+        }
+        if(ChunkProgressBarValue > 5)
+        {
+            ChunkProgressBarValue = 0;
+        }
+
+    }
+
+    private string colorValue { get; set; } = "rgb(40, 47, 137)";
 }
 
-
+<style>
+    .tileBgColor{
+        background-color: @colorValue;
+    }
+</style>
 
