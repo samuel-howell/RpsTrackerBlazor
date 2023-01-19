@@ -1,0 +1,7 @@
+﻿@page "/navigatetopage/{textareaVal}"
+
+<h1 class="alert-heading">The information entered on the previous page was <span class="alert-danger">@textareaVal</span></h1>
+@code {
+    [Parameter]
+    public string textareaVal { get; set; }
+}

@@ -1,0 +1,47 @@
+﻿@page "/backlog/users"
+@using RPS.Core.Models;
+@using RPS.Data;
+
+
+@inject NavigationManager NavigationManager
+<h3>Users</h3>
+
+<TelerikGrid Data="Assignees">
+    <GridColumns>
+        <GridColumn Field="@(nameof(PtUser.FullName))">
+            <Template>
+            @{
+                var ctx = context as PtUser;    
+                
+                    <span class="nav" @onclick="@(()=> NavigationManager.NavigateTo($"backlog/users/{ctx.Id}"))">
+                        @ctx.FullName
+                    </span>
+               
+             }
+            </Template>
+        </GridColumn>
+        <GridColumn Field="@(nameof(PtUser.DateCreated))"></GridColumn>
+        <GridColumn Field="Profile Picture">
+            <Template>
+                @{
+                    var ctx = context as PtUser;
+                    <img src="@(ctx.Avatar)" />
+                }
+            </Template>
+        </GridColumn>
+    </GridColumns>
+</TelerikGrid>
+
+@code {
+
+
+    [Inject]
+    private IPtUserRepository RpsUserRepo { get; set; }
+
+    public List<PtUser> Assignees { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Assignees = RpsUserRepo.GetAll().ToList();
+    }
+}

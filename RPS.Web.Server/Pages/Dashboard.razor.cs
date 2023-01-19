@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 using RPS.Core.Models;
 using RPS.Core.Models.Dto;
 using RPS.Data;
+using RPS.Web.Server.Models;
 
 namespace RPS.Web.Server.Pages
 {
@@ -51,6 +52,39 @@ namespace RPS.Web.Server.Pages
         protected override void OnInitialized()
         {
             Assignees = RpsUserRepo.GetAll().ToList();
+
+            GridData = new List<MachineData>();
+
+            var rnd = new Random();
+
+            for (int i = 1; i <= 30; i++)
+            {
+                GridData.Add(new MachineData
+                {
+                    id = i,
+                    coilNumber = rnd.Next(800000),
+                    dateRan = RandomDay(),
+                    start = RandomTime(),
+                    stop = RandomTime(),
+                    crew = getCrew(),
+                    duration = RandomTime(),
+                    grade = rnd.Next(50),
+                    product = rnd.Next(50),
+                    passes = rnd.Next(10),
+                    gauge = rnd.NextDouble(),
+                    nominal = rnd.NextDouble(),
+                    reduction = rnd.NextDouble(),
+                    width = rnd.NextDouble(),
+                    speed = rnd.NextDouble(),
+                    feet = rnd.NextDouble() * 6,
+                    heatNo = rnd.Next(50),
+                    bonus = rnd.NextDouble() * 4,
+                    time = rnd.NextDouble() * 13
+
+
+
+                });
+            }
         }
 
         private void SingleSelectionChangeHandler(DateTime newValue)

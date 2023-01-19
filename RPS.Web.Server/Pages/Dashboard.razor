@@ -3,6 +3,7 @@
 @using RPS.Core.Models;
 @using RPS.Web.Server.Components.Backlog
 @using RPS.Web.Server.Components.Dashboard
+@using RPS.Web.Server.Models;
 
 
 @inject NavigationManager NavigationManager
@@ -200,12 +201,64 @@
             </TileLayoutItem>
 
 
-            <TileLayoutItem>
+            <TileLayoutItem HeaderText="Nucor Grid Copy with Demo Data" ColSpan="4" RowSpan="6" >
                 <Content>
+
+                    <TelerikGrid Data="@GridData"
+                                 Pageable="true"
+                                 Resizable="true"
+                                 EditMode="GridEditMode.Incell"
+                                 Sortable="true"
+                                 Groupable="true"
+                                 FilterMode="@GridFilterMode.None">
+                    
+                    <GridToolBar>
+                        <GridCommandButton Command="ExcelExport">Export to Excel</GridCommandButton>
+                        <span class="k-toolbar-spacer"></span>
+                        <GridSearchBox></GridSearchBox>
+                    </GridToolBar>
+                        <GridColumns>
+                            
+                            <GridColumn Field=@(nameof(MachineData.id))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.coilNumber))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.dateRan))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.start))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.stop))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.crew))>
+                                <EditorTemplate>
+                                    @{
+                                        var x = context as MachineData;
+                                        Console.WriteLine(x.crew);
+                                    }
+                                    
+                                </EditorTemplate>
+                            </GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.duration))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.grade))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.product))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.passes))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.gauge))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.nominal))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.reduction))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.width))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.speed))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.feet))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.heatNo))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.bonus))></GridColumn>
+                            <GridColumn Field=@(nameof(MachineData.time))></GridColumn>
+                        </GridColumns>
+
+                    </TelerikGrid>
 
                 </Content>
             </TileLayoutItem>
 
+            <TileLayoutItem>
+                <Content>
+                    <TelerikTextArea @bind-Value="@textareaVal"></TelerikTextArea>
+                    <TelerikButton Class="btn" OnClick="SubmitHandler">Submit</TelerikButton>
+                </Content>
+            </TileLayoutItem>
             </TileLayoutItems>
         </TelerikTileLayout>
 
@@ -221,6 +274,8 @@
 
 @code {
 
+    public string textareaVal { get; set; }
+
     public IssueChart IssueChartRef { get; set; }
 
     private void DateRangeFilter(int months)
@@ -232,6 +287,10 @@
     }
 
 
+    public void SubmitHandler()
+    {
+        NavigationManager.NavigateTo($"/navigatetopage/{textareaVal}");
+    }
 
     private void ItemResize()
     {
@@ -275,11 +334,66 @@
     }
 
     private string colorValue { get; set; } = "rgb(40, 47, 137)";
+
+
+    public List<MachineData> GridData { get; set; }
+
+
+
+    private Random gen = new Random();
+
+    public string RandomDay()
+    {
+        DateTime start = new DateTime(1995, 1, 1);
+        int range = (DateTime.Today - start).Days;
+        string day = start.AddDays(gen.Next(range)).ToString("d");
+        return day;
+    }
+
+    public string RandomTime()
+    {
+        DateTime start = DateTime.Today.AddHours(7);
+        Random rnd = new Random();
+        DateTime value = start.AddMinutes(rnd.Next(241));
+        string time = value.ToString("HH:mm");
+        return time;
+    }
+
+   
+
+    public string getCrew()
+    {
+        var rnd = new Random();
+        int num = rnd.Next(4);
+        string crew = "A";
+
+        switch (num)
+        {
+            case 0:
+                crew = "A";
+                break;
+            case 1:
+                crew = "B";
+                break;
+            case 2:
+                crew = "C";
+                break;
+            case 3:
+                crew = "D";
+                break;
+        }
+        return crew;
+    }
+
 }
 
 <style>
     .tileBgColor{
         background-color: @colorValue;
+    }
+
+    .k-column-title {
+        font-weight:bold;
     }
 </style>
 

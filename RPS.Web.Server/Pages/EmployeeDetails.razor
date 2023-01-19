@@ -1,0 +1,23 @@
+﻿@page "/backlog/users/{Id:int}"
+@using RPS.Core.Models;
+@using RPS.Data;
+
+<h3>Employee Details: @Id</h3>
+
+@code {
+
+    [Inject]
+    private IPtUserRepository RpsUserRepo { get; set; }
+
+    public List<PtUser> Assignees { get; set; }
+
+    protected override void OnInitialized()
+    {
+        
+    }
+
+    [Parameter]
+    public int Id { get; set; }
+
+   
+}
